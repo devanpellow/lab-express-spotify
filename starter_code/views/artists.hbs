@@ -1,10 +1,16 @@
-{{#each artists}}
-
-{{this.name}}
-<div>
-  <img src={{this.images.[0].url}} alt="" style='width:15vw;'>
-  <a href="/albums/{{this.id}}"><button>View Albums</button></a>
+<div class="wrap">
+  {{#each items}}
+  {{!-- items (above) is the array return from the API --}}
+  {{this.name}}
+    <div>
+      <img src={{this.images.[0].url}} alt="" style='width:15vw;'>
+      <a href="/albums/{{this.id}}"><button>View Albums</button></a>
+    </div>
+  {{/each}}
 </div>
 
-
-{{/each}}
+{{!-- <div class="wrapper">
+    {{#each items}}
+    {{> artistCard}}
+    {{/each}}
+</div> --}}

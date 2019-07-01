@@ -1,0 +1,16 @@
+<table class="tracks-wrapper">
+    <tr class="heading">
+        <th>Title</th>
+        <th>Listen</th>
+    </tr>
+    {{#each tracks}}
+    <tr class="tracks">
+        <td>
+            <p>{{name}}</p>
+        </td>
+        <td>
+            <audio src={{preview_url}} controls="true" volume class="listen"></audio>
+        </td>
+    </tr>
+    {{/each}}
+</table>

@@ -9,6 +9,9 @@ app.set("view engine", "hbs");
 app.set("views", __dirname + "/views");
 app.use(express.static(__dirname + "/public"));
 
+hbs.registerPartials(__dirname + "/views/partials");
+
+
 const clientId = "1284cf6871ed46a2800ffcc3febd0248",
 	clientSecret = "94b2291ba7684f4e8a52aabb73ca46b1";
 
@@ -36,12 +39,17 @@ app.get("/", (req, res, next) => {
 });
 
 // get artists
-app.get("/artists", (req, res, next) => {
+app.get("/artists/", (req, res, next) => {
+	const search = req.query.q;
+
 	spotifyApi
-		.searchArtists(req.query.q)
+		.searchArtists(search)
 		.then(data => {
-			let artists = data.body.artists.items;
-			res.render("artists", { artists });
+
+			const items = data.body.artists.items;
+      res.render("artists", { items });
+      // "artists" is the name of the hbs file in views folder
+      // { items } above is the array that will be passed into the view/artists.hbs
 		})
 		.catch(err => {
 			console.log("The error while searching artists occurred: ", err);
@@ -56,7 +64,7 @@ app.get("/albums/:artistId", (req, res) => {
 	spotifyApi
 		.getArtistAlbums(artistId)
 		.then(data => {
-			let albums = data.body.items;
+			const albums = data.body.items;
 			res.render("albums", { albums });
 		})
 		.catch(err => {
@@ -65,19 +73,22 @@ app.get("/albums/:artistId", (req, res) => {
 });
 
 // get tracks
-// app.get("/albums/:artistId/tracks/:tracks", (req, res) => {
+app.get("/tracks/:albumId", (req, res) => {
+  const albumId = req.params.albumId;
 
-// 	spotifyApi.getAlbumTracks().then(
-// 		function(data) {
-// 			console.log(data.body);
-// 		},
-// 		function(err) {
-// 			console.log("Something went wrong!", err);
-// 		}
-// 	);
+  spotifyApi.getAlbumTracks(albumId)
+  .then(data => {
+    const tracks = data.body.items
+    // res.send(tracks)
+      res.render("tracks", { tracks });
+      
+  })
+	.catch(err => {
+			console.log("Something went wrong!", err);
 
-// }) 
+    })
 
+})
 
 app.listen(3000, () =>
 	console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
